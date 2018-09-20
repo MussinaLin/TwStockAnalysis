@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 from io import StringIO
 import time
-
+from MooseStockLib import revenue
 #%%
 def monthly_report(year, month):
     
@@ -59,4 +59,4 @@ print ('--------')
 print (stock.moving_average(stock.price,6))
 #print (stock.price[-5:])   # 近五日之收盤價
 '''
-df
+revenue.testModule("Mooseeeee!!!00")
