@@ -8,10 +8,11 @@ import configparser
 import logging
 import logging.config
 
+# logger setting
 logging.config.fileConfig("./config/logconfig.ini")
 logger = logging.getLogger("root")
 
- 
+# config setting
 config = configparser.ConfigParser()
 config.read('./config/config.ini')
 
