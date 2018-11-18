@@ -13,9 +13,11 @@ import pandas as pd
 from MooseStockLib import CompanyRevenue
 from MooseStockLib.DataRetriever import HisDataRetriever
 from DataInitializer import StockDataInitializer
+
 # logger setting
-logging.config.fileConfig('./config/logconfig.ini')
+logging.config.fileConfig('./config/logconfig.ini',disable_existing_loggers=False)
 logger = logging.getLogger('root')
+
 
 logging.info('===== System Start =====')
 
@@ -40,11 +42,12 @@ tt = pd.read_excel('./CompanyData/2330.xlsx')
 print(tt)
 
 retriever = HisDataRetriever()
-#stock = retriever.fetchLast31('2330')
+retriever.fetchLast31('2330')
+#stock = 
 #print(stock.price)
 
 #%%
-print(stock.date[0])
-print(stock.date[0].strftime('%Y-%m-%d'))
+#print(stock.date[0])
+#print(stock.date[0].strftime('%Y-%m-%d'))
 #%%
 logging.info('===== System End =====')
