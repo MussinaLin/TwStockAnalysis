@@ -17,6 +17,7 @@ class HisDataRetriever(object):
     def __init__(self, sid, logger=None):
         self.logger = logger or logging.getLogger("root")
         self.sid = sid
+        self.stock = twstock.Stock(self.sid)
     
     def fetchLast31(self):
         self.logger.info('[v] fetch last 31 days data.')
@@ -25,7 +26,9 @@ class HisDataRetriever(object):
         self.logger.info('[^] fetch last 31 days data.')
     
     def fetchSinceDate(self, year, month):
-        stock = twstock.Stock(self.sid)
-        result = stock.fetch_from(year, month)
+        result = self.stock.fetch_from(year, month)
         return result
+    
+    def getMoving_Avg(self, prices, day):
+        return self.stock.moving_average(prices, day)
     
