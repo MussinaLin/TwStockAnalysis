@@ -31,6 +31,7 @@ temp = config.get('Stock', 'ToBeAnalysisStock')
 ToBeAnalysisStock = temp.split(',')
 logging.info('ToBeAnalysisStock:%s',ToBeAnalysisStock)
 
+#%%
 ini = StockDataInitializer()
 ini.iniCompanyData(ToBeAnalysisStock)
 #monthRevenue = CompanyRevenue.monthly_report(2018,10)
@@ -38,11 +39,11 @@ ini.iniCompanyData(ToBeAnalysisStock)
 #stock = twstock.Stock('2330')
 #print(stock.price)
 #print(stock.date)
-tt = pd.read_excel('./CompanyData/2330.xlsx')
-print(tt)
-
-retriever = HisDataRetriever()
-retriever.fetchLast31('2330')
+#tt = pd.read_excel('./CompanyData/2330.xlsx')
+#print(tt)
+#%%
+#retriever = HisDataRetriever()
+#retriever.fetchLast31('2330')
 #stock = 
 #print(stock.price)
 

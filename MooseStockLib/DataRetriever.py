@@ -14,13 +14,18 @@ import logging
 class HisDataRetriever(object):
     #logging.config.fileConfig('.././config/logconfig.ini')
     
-    def __init__(self, logger=None):
+    def __init__(self, sid, logger=None):
         self.logger = logger or logging.getLogger("root")
-        
+        self.sid = sid
     
-    def fetchLast31(self, sid):
+    def fetchLast31(self):
         self.logger.info('[v] fetch last 31 days data.')
         print("fetchLast31")
         #stock = twstock.Stock(sid)
         self.logger.info('[^] fetch last 31 days data.')
+    
+    def fetchSinceDate(self, year, month):
+        stock = twstock.Stock(self.sid)
+        result = stock.fetch_from(year, month)
+        return result
     
