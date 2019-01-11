@@ -7,7 +7,7 @@ Created on Sat Nov 17 20:52:52 2018
 import logging
 import pandas as pd
 from pathlib import Path
-
+import numpy as np
 """ self lib """
 from MooseStockLib.DataRetriever import HisDataRetriever
 
@@ -37,7 +37,7 @@ class StockDataInitializer():
             excel_writer = pd.ExcelWriter(filePath)
             sid_df = pd.read_excel(filePath)
             sid_df = sid_df.dropna()
-            sid_df = sid_df.astype("float32", copy=False)
+          #  sid_df = sid_df.astype("float32", copy=False)
             
             # --- create data retrever
             dataRetrv = HisDataRetriever(sid)
@@ -46,7 +46,8 @@ class StockDataInitializer():
             if sid_df.empty:
                 self.logger.info('empty excel, download all data')
                 
-                hisData = dataRetrv.fetchSinceDate(2018, 11)
+                # --- fetch data since specific date. #
+                hisData = dataRetrv.fetchSinceDate(2018, 12)
                 
                 # --- get price as list --- #
                 prices = self._getClosePriceList(hisData)
@@ -56,10 +57,13 @@ class StockDataInitializer():
                 MA10 = dataRetrv.getMoving_Avg(prices, 10)
                 MA5 = self._reallocMA(MA5, len(hisData))
                 MA10 = self._reallocMA(MA10, len(hisData))
-
+                
+                # --- set data to dataframe and save to excel. ---#
                 self._setFetchedData(sid_df,MA5,MA10, hisData)
                 sid_df.to_excel(excel_writer, index=False)
                 excel_writer.save()
+                
+                
                 print(sid_df)
             else:
                 self._findLatestDay(sid_df)
@@ -73,9 +77,8 @@ class StockDataInitializer():
             sIdx = 0
         else:
             sIdx = sid_df.last_valid_index() + 1
-        print("sIdx:")
-        print(sIdx)
         
+        #--- set data to dataframe ---#
         maIdx = 0
         for data in hisData:
             sid_df.loc[sIdx] = [data.date.strftime('%Y-%m-%d'),
@@ -91,6 +94,7 @@ class StockDataInitializer():
     ### re-allocate MA lenth
     def _reallocMA(self, MA, hisDataLength):
         diff_MA = hisDataLength - len(MA)  
+        #'self.logger.info('hisDataLength:%d len(MA):%d',hisDataLength, len(MA))
         addiMA = []
         i = 0
         
@@ -101,7 +105,16 @@ class StockDataInitializer():
                 addiMA.append(MA[-1])
                 
         return addiMA + MA
-                
+    '''
+    def _reallocMA(self, MA, days, hisDataLength, prices):
+        diff_MA = hisDataLength - len(MA)
+        addiMA = []
+        i = 0
+        for i in range(diff_MA):
+            
+            np.mean(prices[len(prices) - days])
+    '''         
+            
     def _findLatestDay(self, sid_df):      
         print(sid_df)
     
