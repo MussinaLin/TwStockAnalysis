@@ -13,6 +13,7 @@ import pandas as pd
 from MooseStockLib import CompanyRevenue
 from MooseStockLib.DataRetriever import HisDataRetriever
 from DataInitializer import StockDataInitializer
+from MooseStockLib.TechAnalysis.DirectionalMovementIndex import DMI
 
 # logger setting
 logging.config.fileConfig('./config/logconfig.ini',disable_existing_loggers=False)
@@ -32,8 +33,12 @@ ToBeAnalysisStock = temp.split(',')
 logging.info('ToBeAnalysisStock:%s',ToBeAnalysisStock)
 
 #%%
+df_2330 = None
 ini = StockDataInitializer()
-ini.iniCompanyData(ToBeAnalysisStock)
+for stock_sid in ToBeAnalysisStock:
+    df_2330 = ini.iniCompanyData(stock_sid)
+
+#print(df_2330)
 #monthRevenue = CompanyRevenue.monthly_report(2018,10)
 #print(monthRevenue)
 #stock = twstock.Stock('2330')
@@ -42,10 +47,8 @@ ini.iniCompanyData(ToBeAnalysisStock)
 #tt = pd.read_excel('./CompanyData/2330.xlsx')
 #print(tt)
 #%%
-#retriever = HisDataRetriever()
-#retriever.fetchLast31('2330')
-#stock = 
-#print(stock.price)
+dmi = DMI()
+dmi.create_DMI_Index(df_2330, '2330')
 
 #%%
 #print(stock.date[0])
