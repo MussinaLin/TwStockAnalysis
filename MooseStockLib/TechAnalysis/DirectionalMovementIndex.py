@@ -17,7 +17,8 @@ class DMI():
         
         # --- read and pre-process --- #
         self.logger.info('DMI process...[%s]',company)
-        filePath = "../../CompanyData/" + company + "_DMI.xlsx"
+    #    filePath = "../../CompanyData/" + company + "_DMI.xlsx"
+        filePath = "/Users/Mussina/Documents/GitRepo/Self/TwStockAnalysis/CompanyData/2330_DMI.xlsx"
         sid_file = Path(filePath)
         if not sid_file.is_file():
             self.logger.info("file not exist...please create [%s] file first.",filePath)
@@ -41,11 +42,13 @@ class DMI():
         
         row_num = len(df_company.index)
         for i in range(row_num):
+            #TODO: encapsulate DMI var to a class
             if i == 0:
                 DM_plus = 0
+                DM_minus = 0
             else:
                 DM_plus = self._cal_DM_Plus(df_company.iloc[i]['最高價'], df_company.iloc[i-1]['最高價'])
-            
+                DM_minus = self._cal_DM_Minus(df_company.iloc[i-1]['最低價'], df_company.iloc[i]['最低價'])
             
                 
             df_DMI.loc[dmi_idx] = [df_company.iloc[i]['日期'],
@@ -53,7 +56,7 @@ class DMI():
                                    df_company.iloc[i]['最低價'],
                                    df_company.iloc[i]['收盤價'],
                                    DM_plus,
-                                   df_company.iloc[i]['最高價'],
+                                   DM_minus,
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
@@ -68,17 +71,24 @@ class DMI():
                                    df_company.iloc[i]['最高價']                                
                                   ]
             #df_DMI.iloc[dmi_idx]['最低價'] = df_company.iloc[i]['最低價']
-            dmi_idx += 1         
+            dmi_idx += 1        
+            print("DM_plus:{0} DM_minus:{1}".format(DM_plus, DM_minus))
             # --- get start index --- #
             
-        print(df_DMI)
+        #print(df_DMI)
         #--- set data to dataframe ---#
             #df_company['最高價']
-    def _cal_DM_Plus(Highest_price, pre_Highest_price):
-        DM_plus = Highest_price - pre_Highest_price
+    def _cal_DM_Plus(self, highest_price, pre_highest_price):
+        DM_plus = highest_price - pre_highest_price
         if DM_plus < 0:
             DM_plus = 0
         return DM_plus
+    
+    def _cal_DM_Minus(self, pre_lowest_price, lowest_price):
+        DM_minus = pre_lowest_price - lowest_price
+        if DM_minus < 0:
+            DM_minus = 0
+        return DM_minus
     
     
     
