@@ -44,10 +44,9 @@ class DMI():
             if i == 0:
                 DM_plus = 0
             else:
-                DM_plus = df_company.iloc[i]['最高價'] - df_company.iloc[i-1]['最高價']
+                DM_plus = self._cal_DM_Plus(df_company.iloc[i]['最高價'], df_company.iloc[i-1]['最高價'])
             
-            if DM_plus < 0:
-                DM_plus = 0
+            
                 
             df_DMI.loc[dmi_idx] = [df_company.iloc[i]['日期'],
                                    df_company.iloc[i]['最高價'],
@@ -75,7 +74,11 @@ class DMI():
         print(df_DMI)
         #--- set data to dataframe ---#
             #df_company['最高價']
-    
+    def _cal_DM_Plus(Highest_price, pre_Highest_price):
+        DM_plus = Highest_price - pre_Highest_price
+        if DM_plus < 0:
+            DM_plus = 0
+        return DM_plus
     
     
     

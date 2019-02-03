@@ -47,7 +47,7 @@ class StockDataInitializer():
             self.logger.info('empty excel, download all data')
                 
             # --- fetch data since specific date. #
-            hisData = dataRetrv.fetchSinceDate(2018, 12)
+            hisData = dataRetrv.fetchSinceDate(2019, 1)
                 
             # --- get price as list --- #
             prices = self._getClosePriceList(hisData)
