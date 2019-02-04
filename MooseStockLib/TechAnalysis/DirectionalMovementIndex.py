@@ -46,10 +46,12 @@ class DMI():
             if i == 0:
                 DM_plus = 0
                 DM_minus = 0
+                DM_Plus_Pulan = 0
+                DM_Minus_Pulan = 0
             else:
                 DM_plus = self._cal_DM_Plus(df_company.iloc[i]['最高價'], df_company.iloc[i-1]['最高價'])
                 DM_minus = self._cal_DM_Minus(df_company.iloc[i-1]['最低價'], df_company.iloc[i]['最低價'])
-            
+                (DM_Plus_Pulan, DM_Minus_Pulan) = self._cal_DM_Plus_Minus_Pulan(DM_plus, DM_minus)
                 
             df_DMI.loc[dmi_idx] = [df_company.iloc[i]['日期'],
                                    df_company.iloc[i]['最高價'],
@@ -57,8 +59,8 @@ class DMI():
                                    df_company.iloc[i]['收盤價'],
                                    DM_plus,
                                    DM_minus,
-                                   df_company.iloc[i]['最高價'],
-                                   df_company.iloc[i]['最高價'],
+                                   DM_Plus_Pulan,
+                                   DM_Minus_Pulan,
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
@@ -73,6 +75,7 @@ class DMI():
             #df_DMI.iloc[dmi_idx]['最低價'] = df_company.iloc[i]['最低價']
             dmi_idx += 1        
             print("DM_plus:{0} DM_minus:{1}".format(DM_plus, DM_minus))
+            print("DM_Plus_Pulan:{0} DM_Minus_Pulan:{1}".format(DM_Plus_Pulan, DM_Minus_Pulan))
             # --- get start index --- #
             
         #print(df_DMI)
@@ -89,6 +92,20 @@ class DMI():
         if DM_minus < 0:
             DM_minus = 0
         return DM_minus
+    
+    def _cal_DM_Plus_Minus_Pulan(self, DM_plus, DM_minus):
+        if DM_plus > DM_minus:
+            DM_Plus_Pulan = DM_plus
+            DM_Minus_Pulan = 0
+        elif DM_plus < DM_minus:
+            DM_Plus_Pulan = 0
+            DM_Minus_Pulan = DM_minus
+        else:
+            DM_Plus_Pulan = 0
+            DM_Minus_Pulan = 0
+        
+        return (DM_Plus_Pulan, DM_Minus_Pulan)
+    
     
     
     
