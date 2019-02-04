@@ -11,6 +11,7 @@ from pathlib import Path
 class DMI():
     def __init__(self, logger=None):
         self.logger = logger or logging.getLogger("root")
+        self.AVERAGE_N = 14
         
     def create_DMI_Index(self, df_company, company):
         self.logger.info('[v] create DMI')
@@ -52,11 +53,13 @@ class DMI():
                 Ht_Ct = 0
                 Lt_Ct = 0
                 TR = 0
+                ADM_plus = 0
             else:
                 DM_plus = self._cal_DM_Plus(df_company.iloc[i]['最高價'], df_company.iloc[i-1]['最高價'])
                 DM_minus = self._cal_DM_Minus(df_company.iloc[i-1]['最低價'], df_company.iloc[i]['最低價'])
                 (DM_Plus_Pulan, DM_Minus_Pulan) = self._cal_DM_Plus_Minus_Pulan(DM_plus, DM_minus)
                 (Ht_Lt, Ht_Ct, Lt_Ct, TR) = self._cal_TR(df_company.iloc[i]['最高價'], df_company.iloc[i]['最低價'],df_company.iloc[i-1]['收盤價'])
+                ADM_plus = self._cal_ADM_Plus(df_DMI.loc[dmi_idx - 1]['+ADM'],  DM_Plus_Pulan)
                 
             df_DMI.loc[dmi_idx] = [df_company.iloc[i]['日期'],
                                    df_company.iloc[i]['最高價'],
@@ -70,7 +73,7 @@ class DMI():
                                    Ht_Ct,
                                    Lt_Ct,
                                    TR,
-                                   df_company.iloc[i]['最高價'],
+                                   ADM_plus,
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
                                    df_company.iloc[i]['最高價'],
@@ -79,7 +82,7 @@ class DMI():
                                   ]
             #df_DMI.iloc[dmi_idx]['最低價'] = df_company.iloc[i]['最低價']
             dmi_idx += 1        
-            print("Ht_Lt:{0} Ht_Ct:{1} Lt_Ct:{2} TR:{3}".format(Ht_Lt, Ht_Ct,Lt_Ct,TR))
+            print("DM_Plus_Pulan:{0} ADM_plus:{1}".format(DM_Plus_Pulan,ADM_plus))
             
             # --- get start index --- #
             
@@ -130,6 +133,13 @@ class DMI():
         Lt_Ct = abs(lowest_price - pre_close_price)
         TR = max(Ht_Lt,Ht_Ct,Lt_Ct)
         return (Ht_Lt, Ht_Ct, Lt_Ct, TR)
+    
+    '''
+    calculate +ADM (average DM)
+    '''
+    def _cal_ADM_Plus(self, pre_ADM_plus, DM_plus):
+        ADM_plus = pre_ADM_plus + ( DM_plus - pre_ADM_plus) / self.AVERAGE_N
+        return round(ADM_plus, 4)
     
     
     
