@@ -25,14 +25,17 @@ class DMI():
             self.logger.info("file not exist...please create [%s] file first.",filePath)
             return
         
-        #excel_writer = pd.ExcelWriter(filePath)
+        excel_writer = pd.ExcelWriter(filePath)
         df_DMI = pd.read_excel(filePath)
         
         #df_DMI = df_DMI.dropna()
         
         self._createDMI(df_company, df_DMI)
         
-        #excel_writer.close()
+        # write to excel
+        df_DMI.to_excel(excel_writer, index=False)
+        excel_writer.save()
+        excel_writer.close()
         self.logger.info('[^] create DMI')
         
     def _createDMI(self, df_company, df_DMI):
@@ -98,7 +101,7 @@ class DMI():
                                   ]
             #df_DMI.iloc[dmi_idx]['最低價'] = df_company.iloc[i]['最低價']
             dmi_idx += 1        
-            print("DXt:{0} ADXt:{1}".format(DXt,ADXt))
+            #print("DXt:{0} ADXt:{1}".format(DXt,ADXt))
             
             # --- get start index --- #
             
