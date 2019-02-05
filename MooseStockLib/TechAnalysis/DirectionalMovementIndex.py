@@ -56,6 +56,11 @@ class DMI():
                 ADM_plus = 0
                 ADM_minus = 0
                 ATR = 0
+                DIt_plus = 0
+                DIt_minus = 0
+                DXt = 0
+                ADXt = 0
+                DMO = 0
             else:
                 DM_plus = self._cal_DM_Plus(df_company.iloc[i]['最高價'], df_company.iloc[i-1]['最高價'])
                 DM_minus = self._cal_DM_Minus(df_company.iloc[i-1]['最低價'], df_company.iloc[i]['最低價'])
@@ -64,6 +69,11 @@ class DMI():
                 ADM_plus = self._cal_ADM_Plus(df_DMI.loc[dmi_idx - 1]['+ADM'],  DM_Plus_Pulan)
                 ADM_minus = self._cal_ADM_Minus(df_DMI.loc[dmi_idx - 1]['-ADM'],  DM_Minus_Pulan)
                 ATR = self._cal_ATR(df_DMI.loc[dmi_idx - 1]['ATR'],TR)
+                DIt_plus = ADM_plus / ATR
+                DIt_minus = ADM_minus / ATR
+                DXt = (abs(DIt_plus - DIt_minus) / (DIt_plus + DIt_minus)) * 100
+                ADXt = self._cal_ADXt(df_DMI.loc[dmi_idx - 1]['ADXt'], DXt)
+                DMO = DIt_plus - DIt_minus
                 
             df_DMI.loc[dmi_idx] = [df_company.iloc[i]['日期'],
                                    df_company.iloc[i]['最高價'],
@@ -80,13 +90,15 @@ class DMI():
                                    ADM_plus,
                                    ADM_minus,
                                    ATR,
-                                   df_company.iloc[i]['最高價'],
-                                   df_company.iloc[i]['最高價'],
-                                   df_company.iloc[i]['最高價']                                
+                                   DIt_plus,
+                                   DIt_minus,
+                                   DXt,
+                                   ADXt,
+                                   DMO
                                   ]
             #df_DMI.iloc[dmi_idx]['最低價'] = df_company.iloc[i]['最低價']
             dmi_idx += 1        
-            print("TR:{0} ATR:{1}".format(TR,ATR))
+            print("DXt:{0} ADXt:{1}".format(DXt,ADXt))
             
             # --- get start index --- #
             
@@ -160,6 +172,12 @@ class DMI():
         ATR = pre_ATR + ( TR - pre_ATR) / self.AVERAGE_N
         return round(ATR, 4)
     
+    '''
+    calculate ADXt(average DXt)
+    '''
+    def _cal_ADXt(self, pre_ADXt, DXt):
+        ADXt = pre_ADXt + ( DXt - pre_ADXt) / self.AVERAGE_N
+        return round(ADXt, 4)
     
     
     
