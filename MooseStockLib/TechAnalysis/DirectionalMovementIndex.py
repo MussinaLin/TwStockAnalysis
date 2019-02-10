@@ -7,6 +7,7 @@ Created on Fri Jan 11 15:28:21 2019
 import logging
 import pandas as pd
 from pathlib import Path
+from ..POJO.TechAnalysisData import DMIData
 
 class DMI():
     def __init__(self, logger=None):
